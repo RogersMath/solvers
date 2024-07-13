@@ -15,32 +15,57 @@
             background-color: #f0f0f0;
         }
         #game-container {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         #hexagon-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(8, 60px);
+            grid-gap: 5px 3px;
+            padding-top: 30px;
+            padding-bottom: 30px;
         }
-        .hexagon {
-            width: 100px;
-            height: 100px;
+        .hex {
+            width: 60px;
+            height: 70px;
+            background-color: #ddd;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #ddd;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            cursor: pointer;
+            font-size: 12px;
+            text-align: center;
         }
-        #actions {
+        .hex:nth-child(even) {
+            grid-column-start: 2;
+        }
+        .hex.blank {
+            background-color: transparent;
+            pointer-events: none;
+        }
+        #keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .key {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px;
+            justify-content: center;
+            align-items: center;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -48,11 +73,7 @@
     <div id="game-container">
         <h1>Solvers MVP</h1>
         <div id="hexagon-grid"></div>
-        <div id="actions">
-            <button id="area-attack">Area Attack</button>
-            <button id="strike-attack">Strike Attack</button>
-            <button id="range-attack">Range Attack</button>
-        </div>
+        <div id="keypad"></div>
         <div id="message"></div>
     </div>
     <script src="game.js"></script>

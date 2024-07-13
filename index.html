@@ -2,80 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solvers MVP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Solvers Simplified MVP</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-        }
-        #game-container {
+            padding: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            background-color: #f0f0f0;
         }
-        #hexagon-grid {
+        #game-board {
             display: grid;
-            grid-template-columns: repeat(8, 60px);
-            grid-gap: 5px 3px;
-            padding-top: 30px;
-            padding-bottom: 30px;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 2px;
+            padding: 5px;
+            background-color: #ccc;
+            height: 50vh;
         }
-        .hex {
-            width: 60px;
-            height: 70px;
-            background-color: #ddd;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        .cell {
+            aspect-ratio: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 12px;
-            text-align: center;
+            font-weight: bold;
         }
-        .hex:nth-child(even) {
-            grid-column-start: 2;
+        .movable {
+            background-color: white;
+            border: 1px solid blue;
         }
-        .hex.blank {
-            background-color: transparent;
-            pointer-events: none;
+        .neutral {
+            background-color: grey;
         }
-        #keypad {
+        .enemy {
+            background-color: red;
+        }
+        .player {
+            background-color: blue;
+        }
+        #actions {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            gap: 5px;
+            padding: 5px;
         }
-        .key {
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        #items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            padding: 5px;
+        }
+        .action, .item {
+            padding: 10px;
+            text-align: center;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
         }
-        #message {
-            margin-top: 20px;
-            font-weight: bold;
+        #keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            padding: 5px;
+        }
+        .key {
+            aspect-ratio: 1;
+            font-size: 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <h1>Solvers MVP</h1>
-        <div id="hexagon-grid"></div>
-        <div id="keypad"></div>
-        <div id="message"></div>
+    <div id="game-board"></div>
+    <div id="actions">
+        <button class="action">Attack 1</button>
+        <button class="action">Attack 2</button>
+        <button class="action">Attack 3</button>
     </div>
+    <div id="items">
+        <button class="item">Item 1</button>
+        <button class="item">Item 2</button>
+        <button class="item">Item 3</button>
+    </div>
+    <div id="keypad"></div>
     <script src="game.js"></script>
 </body>
 </html>

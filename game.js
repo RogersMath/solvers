@@ -52,60 +52,124 @@ class SolversGame {
     }
 
     updateBoard() {
-        this.currentEquations = {};
         this.ui.updateBoard();
+        this.generateEquations();
         this.ui.updateActionsAndItems();
-        this.generateMoveEquations();
     }
 
-    generateMoveEquations() {
+    generateEquations() {
+        const availableNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const operations = ['+', '-', '*', '/'];
+        this.currentEquations = {};
+
+        while (availableNumbers.length > 0) {
+            const a = availableNumbers.splice(Math.floor(Math.random() * availableNumbers.length), 1)[0];
+            const b = Math.floor(Math.random() * 10);
+            const operation = operations[Math.floor(Math.random() * operations.length)];
+
+            let equation, result;
+            switch (operation) {
+                case '+':
+                    equation = `${a + b} - ${b}`;
+                    result = a;
+                    break;
+                case '-':
+                    equation = `${a + b} + ${b}`;
+                    result = a;
+                    break;
+                case '*':
+                    equation = `${a * b} / ${b}`;
+                    result = a;
+                    break;
+                case '/':
+                    equation = `${a * b} * ${b}`;
+                    result = a;
+                    break;
+            }
+            this.currentEquations[result] = equation;
+        }
+
+        // Assign equations to movable cells
         const directions = [
-            { x: 0, y: -1, key: 1 }, // Up
-            { x: 1, y: 0, key: 2 },  // Right
-            { x: 0, y: 1, key: 3 },  // Down
-            { x: -1, y: 0, key: 4 }  // Left
+            { x: 0, y: -1 }, // Up
+            { x: 1, y: 0 },  // Right
+            { x: 0, y: 1 },  // Down
+            { x: -1, y: 0 }  // Left
         ];
 
-        directions.forEach(dir => {
-            const equation = this.generateEquation();
-            const result = this.solveEquation(equation) % 10;
-            this.currentEquations[result] = dir;
+        directions.forEach((dir, index) => {
             const cell = this.board[4 + dir.y][4 + dir.x];
-            cell.textContent = equation;
+            cell.textContent = this.currentEquations[index];
         });
-
-        // Generate equations for actions and items
-        for (let i = 5; i <= 9; i++) {
-            const equation = this.generateEquation();
-            const result = this.solveEquation(equation) % 10;
-            this.currentEquations[result] = { action: i - 4 };
-        }
-    }
-
-    generateEquation() {
-        const operators = ['+', '-', '*'];
-        const num1 = Math.floor(Math.random() * 10) + 1;
-        const num2 = Math.floor(Math.random() * 10) + 1;
-        const operator = operators[Math.floor(Math.random() * operators.length)];
-        return `${num1}${operator}${num2}`;
-    }
-
-    solveEquation(equation) {
-        return eval(equation);
     }
 
     handleKeyPress(key) {
         if (key in this.currentEquations) {
-            const action = this.currentEquations[key];
-            if (action.x !== undefined && action.y !== undefined) {
-                this.playerPosition.x += action.x;
-                this.playerPosition.y += action.y;
-            } else if (action.action !== undefined) {
-                console.log(`Action ${action.action} triggered`);
+            if (key < 4) {
+                const directions = [
+                    { x: 0, y: -1 }, // Up
+                    { x: 1, y: 0 },  // Right
+                    { x: 0, y: 1 },  // Down
+                    { x: -1, y: 0 }  // Left
+                ];
+                this.playerPosition.x += directions[key].x;
+                this.playerPosition.y += directions[key].y;
+            } else {
+                console.log(`Action ${key - 3} triggered`);
                 // Implement action logic here
             }
             this.endTurn();
         }
+    }
+}
+
+class EnemyManager {
+    constructor(game) {
+        this.game = game;
+        this.enemies = [];
+    }
+
+    spawnEnemy() {
+        const side = Math.floor(Math.random() * 4);
+        let x, y;
+        switch (side) {
+            case 0: // Top
+                x = Math.floor(Math.random() * 9) - 4;
+                y = -4;
+                break;
+            case 1: // Right
+                x = 5;
+                y = Math.floor(Math.random() * 9) - 4;
+                break;
+            case 2: // Bottom
+                x = Math.floor(Math.random() * 9) - 4;
+                y = 5;
+                break;
+            case 3: // Left
+                x = -5;
+                y = Math.floor(Math.random() * 9) - 4;
+                break;
+        }
+        this.enemies.push({ x, y });
+    }
+
+    moveEnemies() {
+        this.enemies.forEach(enemy => {
+            const dx = Math.sign(this.game.playerPosition.x - enemy.x);
+            const dy = Math.sign(this.game.playerPosition.y - enemy.y);
+            if (Math.abs(dx) > Math.abs(dy)) {
+                enemy.x += dx;
+            } else {
+                enemy.y += dy;
+            }
+        });
+    }
+
+    removeDeadEnemies() {
+        this.enemies = this.enemies.filter(enemy => 
+            Math.abs(enemy.x - this.game.playerPosition.x) > 0 || 
+            Math.abs(enemy.y - this.game.playerPosition.y) > 0
+        );
     }
 }
 

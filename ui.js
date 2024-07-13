@@ -13,7 +13,7 @@ class UI {
             this.game.board[y] = [];
             for (let x = 0; x < 9; x++) {
                 const cell = document.createElement('div');
-                cell.className = 'cell';
+                cell.className = 'cell neutral';
                 gameBoard.appendChild(cell);
                 this.game.board[y][x] = cell;
             }
@@ -22,10 +22,9 @@ class UI {
 
     createKeypad() {
         const keypad = document.getElementById('keypad');
-        for (let i = 1; i <= 9; i++) {
+        for (let i = 0; i <= 9; i++) {
             this.createKey(keypad, i);
         }
-        this.createKey(keypad, 0);
     }
 
     createKey(keypad, number) {
@@ -70,8 +69,6 @@ class UI {
                     cell.textContent = 'E';
                 } else if (Math.abs(x - 4) + Math.abs(y - 4) === 1) {
                     cell.className = 'cell movable';
-                    const equation = this.game.generateEquation();
-                    cell.textContent = equation;
                 }
             }
         }
@@ -81,7 +78,7 @@ class UI {
         const actions = document.querySelectorAll('.action');
         const items = document.querySelectorAll('.item');
         [...actions, ...items].forEach((element, index) => {
-            const equation = this.game.generateEquation();
+            const equation = this.game.currentEquations[index + 4];
             element.textContent = equation;
         });
     }
